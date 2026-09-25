@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dúha Rande — spoznaj sa a choď na rande</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#111;color:#fff;display:flex;justify-content:center;min-height:100vh}
+.app{width:100%;max-width:480px;min-height:100dvh;background:linear-gradient(180deg,#1a1a2e,#0d0d1a);position:relative;display:flex;flex-direction:column;overflow:hidden}
+header{padding:14px;text-align:center;background:linear-gradient(90deg,#ff5e78,#ff8a5c,#f5c542,#4ade80,#60a5fa,#c084fc);-webkit-background-clip:text;background-clip:text}
+header h1{font-size:22px;font-weight:900;color:#fff}
+header h1 span{background:linear-gradient(90deg,#ff5e78,#f5c542,#4ade80,#60a5fa,#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent}
+header p{font-size:12px;opacity:.7;color:#ddd}
+.tabs{display:flex;background:#00000066;border-bottom:1px solid #333}
+.tabs button{flex:1;background:none;border:none;color:#888;padding:12px;font-size:13px;font-weight:700;cursor:pointer}
+.tabs button.active{color:#fff;border-bottom:3px solid #ff5e78}
+.view{flex:1;overflow-y:auto;padding:14px;padding-bottom:90px;display:none}
+.view.active{display:block}
+/* cards */
+.profile-card{background:#1e1e2e;border-radius:18px;overflow:hidden;border:1px solid #333;margin-bottom:16px}
+.profile-card img{width:100%;height:340px;object-fit:cover}
+.pc-body{padding:14px}
+.pc-body h2{font-size:20px}
+.pc-body h2 small{opacity:.6;font-weight:400}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tag{background:#2a2a40;border:1px solid #444;border-radius:12px;padding:4px 10px;font-size:12px}
+.btns{display:flex;gap:10px;margin-top:10px}
+.btn{flex:1;padding:12px;border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:15px}
+.pass{background:#2a2a40;color:#fff}
+.like{background:linear-gradient(90deg,#ff5e78,#ff8a5c);color:#fff}
+.chat-btn{background:#2a2a40;color:#fff;border:1px solid #ff5e78;width:100%;margin-top:8px;padding:10px;border-radius:12px;cursor:pointer;font-weight:700}
+/* matches */
+.match{display:flex;gap:12px;align-items:center;background:#1e1e2e;padding:10px;border-radius:14px;margin-bottom:10px;border:1px solid #333}
+.match img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #ff5e78}
+.match button{margin-left:auto;background:#ff5e78;border:none;color:#fff;padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+/* chat */
+.chat-list{display:flex;flex-direction:column;gap:8px}
+.bubble{max-width:80%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.4}
+.me{align-self:flex-end;background:linear-gradient(90deg,#ff5e78,#ff8a5c)}
+.him{align-self:flex-start;background:#2a2a40}
+.chat-input{display:flex;gap:8px;margin-top:12px;position:sticky;bottom:0;background:#0d0d1a;padding:10px 0}
+.chat-input input{flex:1;background:#222;border:1px solid #444;border-radius:20px;padding:10px 14px;color:#fff;outline:none}
+.chat-input button{background:#ff5e78;border:none;border-radius:20px;padding:10px 16px;color:#fff;font-weight:700;cursor:pointer}
+/* date form */
+.form{background:#1e1e2e;border-radius:16px;padding:16px;border:1px solid #333}
+.form label{font-size:13px;opacity:.8;display:block;margin:10px 0 4px}
+.form select,.form input{width:100%;background:#111;border:1px solid #444;border-radius:10px;color:#fff;padding:10px}
+.form button{width:100%;margin-top:14px;background:linear-gradient(90deg,#f5c542,#ff8a5c);border:none;padding:12px;border-radius:12px;font-weight:800;cursor:pointer;color:#000}
+.date-card{background:#1e1e2e;border-left:4px solid #4ade80;border-radius:12px;padding:12px;margin-top:10px;font-size:14px}
+.safety{background:#2a2500;border:1px solid #f5c542;border-radius:12px;padding:12px;font-size:12.5px;margin-top:14px;line-height:1.5;color:#ffe9a3}
+/* age gate */
+.gate{position:absolute;inset:0;background:rgba(0,0,0,.96);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
+.gate .box{background:#1e1e2e;border-radius:20px;padding:28px;border:1px solid #ff5e78}
+.gate h2{margin-bottom:10px}
+.gate p{font-size:14px;opacity:.8;margin-bottom:16px;line-height:1.5}
+.gate button{padding:12px 20px;border-radius:12px;border:none;font-weight:800;cursor:pointer;margin:4px}
+.yes{background:#4ade80}
+.no{background:#333;color:#fff}
+.bottom{position:absolute;bottom:0;left:0;right:0;background:#0d0d1af2;border-top:1px solid #333;padding:10px;text-align:center;font-size:11px;opacity:.7}
+@media(min-width:520px){body{align-items:center;padding:20px}.app{border-radius:24px;min-height:92dvh;max-height:92dvh;border:1px solid #444}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><h1>🏳️‍🌈 Dúha<span>Rande</span></h1><p>spoznaj sa • píš si • choď na rande</p></header>
+<div class="tabs">
+<button id="t-objav" class="active" onclick="show('objav')">Objav</button>
+<button id="t-zhody" onclick="show('zhody')">Zhody</button>
+<button id="t-chat" onclick="show('chat')">Chat</button>
+<button id="t-rande" onclick="show('rande')">Rande</button>
+</div>
+
+<div class="view active" id="v-objav"></div>
+<div class="view" id="v-zhody"><h3>Tvoje zhody</h3><div id="matches" style="margin-top:10px"></div></div>
+<div class="view" id="v-chat">
+<h3 id="chatName">Vyber si zhodu</h3>
+<div class="chat-list" id="chatList" style="margin-top:10px"></div>
+<div class="chat-input"><input id="msg" placeholder="Napíš správu..."><button onclick="send()">➤</button></div>
+</div>
+<div class="view" id="v-rande">
+<h3>Naplánuj rande</h3>
+<div class="form">
+<label>S kým?</label><select id="dWho"></select>
+<label>Kam?</label><select id="dWhere"><option>Kaviareň — Kafé Dúha, Bratislava</option><option>Prechádzka — Sad Janka Kráľa</option><option>Kino — Lumière</option><option>Večera — reštaurácia UFO</option><option>Piknik — Železná studnička</option></select>
+<label>Kedy?</label><input type="datetime-local" id="dWhen">
+<button onclick="planDate()">Pozvať na rande</button>
+</div>
+<div id="dates"></div>
+<div class="safety"><b>Bezpečnosť na prvom rande:</b><br>• stretni sa na verejnom mieste<br>• daj vedieť kamarátovi, kam ideš<br>• nezdieľaj adresu ani citlivé údaje<br>• rešpektuj hranice — nie je hanba odísť</div>
+</div>
+
+<div class="bottom">Len 18+ • Buď milý • Rešpektuj ostatných • Fiktívne profily na ukážku</div>
+
+<div class="gate" id="gate"><div class="box"><h2>Vitaj na DúhaRande</h2><p>Táto appka je zoznamka pre dospelých mužov, ktorí hľadajú mužov.<br>Máš 18 alebo viac rokov?</p><button class="yes" onclick="document.getElementById('gate').style.display='none'">Mám 18+</button><button class="no" onclick="alert('Prepáč, appka je len pre dospelých 18+.')">Nemám 18</button></div></div>
+</div>
+<script>
+const guys=[
+{id:0,name:"Martin",age:28,img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=70",bio:"Milujem kávu, turistiku a dobrý film. Hľadám niekoho na dlhé prechádzky aj dlhé rozhovory.",tags:["káva","turistika","kino"]},
+{id:1,name:"Jakub",age:26,img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=70",bio:"Tréner a dog-lover. Zlatý retríver Bruno je môj parťák. Poď s nami do parku!",tags:["šport","psy","príroda"]},
+{id:2,name:"Tomáš",age:31,img:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=70",bio:"Kuchár, čo rád varí pre dvoch. Talianska kuchyňa a červené víno.",tags:["varenie","víno","cestovanie"]},
+{id:3,name:"Peťo",age:24,img:"https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=600&q=70",bio:"Študent dizajnu, milujem umenie a galérie. Hľadám spriaznenú kreatívnu dušu.",tags:["umenie","dizajn","hudba"]},
+{id:4,name:"Lukáš",age:29,img:"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=70",bio:"IT-čkár cez deň, DJ večer. Rád ťa pozvem na drink a dobrú hudbu.",tags:["hudba","tanec","tech"]},
+{id:5,name:"Marek",age:33,img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=70",bio:"Kľudný typ, knihy a hory. Hľadám vážny vzťah, nie len písanie.",tags:["knihy","hory","vážny vzťah"]},
+{id:6,name:"Filip",age:27,img:"https://images.unsplash.com/photo-1531891437562-4301cf35b7e4?auto=format&fit=crop&w=600&q=70",bio:"Fotograf — najradšej fotím zlaté zvieratká aj zlatých ľudí. Ukážem ti mesto inak.",tags:["fotenie","mesto","zvieratá"]},
+{id:7,name:"Adam",age:30,img:"https://images.unsplash.com/photo-1521119989659-a83eee488004?auto=format&fit=crop&w=600&q=70",bio:"Vždy usmiaty, milujem brunch a smiech. Poď na kávu, zvyšok uvidíme.",tags:["brunch","smiech","pohoda"]}
+];
+let likes=new Set(), chats={}, activeChat=null, dates=[];
+const replies=["To znie super! Čo robíš cez víkend?","Súhlasím! Dáme kávu v sobotu?","Haha, presne tak to mám aj ja.","Si z Bratislavy? Ja som z Ružinova.","Máš rád prechádzky? Ja chodím so psom každý večer.","Chceš ísť niekedy na rande? Neboj, verejné miesto.","Aká je tvoja obľúbená reštaurácia?","Super, že si napísal! Ako sa máš dnes?"];
+function show(v){
+document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
+document.getElementById('v-'+v).classList.add('active');
+document.getElementById('t-'+v).classList.add('active');
+if(v==='zhody')renderMatches();
+if(v==='rande')renderDateForm();
+}
+function renderObjav(){
+const box=document.getElementById('v-objav');box.innerHTML='';
+guys.filter(g=>!likes.has(g.id)).forEach(g=>{
+const d=document.createElement('div');d.className='profile-card';
+d.innerHTML=`<img src="${g.img}"><div class="pc-body"><h2>${g.name}, ${g.age}</h2><p style="font-size:14px;opacity:.85;margin-top:6px">${g.bio}</p><div class="tags">${g.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div><div class="btns"><button class="btn pass" onclick="pass(${g.id})">✕ Preskočiť</button><button class="btn like" onclick="like(${g.id})">♥ Páči sa mi</button></div></div>`;
+box.appendChild(d);
+});
+if(!box.innerHTML)box.innerHTML='<p style="opacity:.7">Pozrel si všetkých! Skús neskôr alebo napíš svojim zhodám.</p>';
+}
+function like(id){likes.add(id);chats[id]=chats[id]||[{from:'him',text:'Ahoj! Vidím, že sme si padli do oka. Ako sa máš?'}];renderObjav();alert('Máte zhodu s '+guys[id].name+'! Nájdeš ho v Zhody.')}
+function pass(id){likes.add(id);renderObjav();}
+function renderMatches(){
+const box=document.getElementById('matches');box.innerHTML='';
+[...likes].forEach(id=>{const g=guys[id];
+const d=document.createElement('div');d.className='match';
+d.innerHTML=`<img src="${g.img}"><div><b>${g.name}, ${g.age}</b><br><small style="opacity:.7">${g.bio.slice(0,40)}...</small></div><button onclick="openChat(${id})">Písať</button>`;
+box.appendChild(d);});
+if(!box.innerHTML)box.innerHTML='<p style="opacity:.6">Zatiaľ žiadne zhody. Daj niekomu like v Objav.</p>';
+}
+function openChat(id){activeChat=id;document.getElementById('chatName').textContent='Chat s '+guys[id].name;show('chat');drawChat();}
+function drawChat(){
+const box=document.getElementById('chatList');box.innerHTML='';
+if(activeChat===null)return;
+(chats[activeChat]||[]).forEach(m=>{const d=document.createElement('div');d.className='bubble '+(m.from==='me'?'me':'him');d.textContent=m.text;box.appendChild(d);});
+box.scrollTop=box.scrollHeight;
+}
+function send(){
+const v=document.getElementById('msg').value.trim();
+if(v===''||activeChat===null){if(activeChat===null)alert('Najprv si vyber zhodu v záložke Zhody.');return;}
+chats[activeChat].push({from:'me',text:v});document.getElementById('msg').value='';drawChat();
+setTimeout(()=>{chats[activeChat].push({from:'him',text:replies[Math.floor(Math.random()*replies.length)]});drawChat();},900);
+}
+function renderDateForm(){
+const sel=document.getElementById('dWho');sel.innerHTML='';
+[...likes].forEach(id=>{sel.innerHTML+=`<option value="${id}">${guys[id].name}, ${guys[id].age}</option>`});
+if(!sel.innerHTML)sel.innerHTML='<option value="">— najprv si nájdi zhodu —</option>';
+const box=document.getElementById('dates');box.innerHTML='<h4 style="margin-top:14px">Tvoje rande:</h4>';
+dates.forEach(d=>{box.innerHTML+=`<div class="date-card"><b>${d.who}</b> — ${d.where}<br>📅 ${d.when}<br><small>Pozvánka odoslaná! Držíme palce.</small></div>`});
+}
+function planDate(){
+const w=document.getElementById('dWho').value;
+const where=document.getElementById('dWhere').value;
+const when=document.getElementById('dWhen').value;
+if(w===''){alert('Najprv potrebuješ zhodu v Objav.');return;}
+if(!when){alert('Vyber dátum a čas.');return;}
+dates.push({who:guys[w].name,where,when:when.replace('T',' o ')});
+renderDateForm();alert('Pozvánka na rande odoslaná pre '+guys[w].name+'!');
+}
+renderObjav();
+</script>
+</body>
+</html>
